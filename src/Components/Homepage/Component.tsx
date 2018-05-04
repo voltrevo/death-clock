@@ -7,10 +7,27 @@ import styled from '../../Util/StyledComponents';
 import { ThemeProvider } from 'styled-components';
 import Theme from '../../Util/Theme';
 import { Radio } from 'material-ui';
+import Sex from '../../Util/Sex';
+import { CSSProperties } from 'react';
 
 const Container = styled.div`
+  padding-top: 50px;
   display: grid;
-  grid-template-columns: 1fr 80px 1fr;
+  grid-template-columns: 1fr 80px auto auto 1fr;
+  align-items: center;
+`;
+
+const SexSelector = styled.div`
+  align-items: center;
+`;
+
+const LifeLeftText = styled.h1`
+  align-self: center;
+  text-align: center;
+  color: ${p => p.theme.colour.Secondary};
+  font-weight: 300;
+  font-size: 1.5rem;
+  grid-column: 1/-1;
 `;
 
 const AgeInput = styled.input`
@@ -34,6 +51,16 @@ const AgeInput = styled.input`
   }
 `;
 
+const RadioStyle = (selected: boolean): CSSProperties => {
+  if (selected) { return {color: Theme.colour.Secondary };
+  } else { return { color: Theme.colour.PrimaryLight }; }
+};
+
+const SexText = (selected: boolean): CSSProperties => {
+  if (selected) { return {color: Theme.colour.Secondary, fontWeight: 300 };
+  } else { return { color: Theme.colour.PrimaryLight, fontWeight: 300 }; }
+};
+
 export const Component: React.SFC<{ store: App.Store }> = (
   ({store}) => {
     const dispatch = (action: State.Action) => {
@@ -49,6 +76,17 @@ export const Component: React.SFC<{ store: App.Store }> = (
       });
     };
 
+    const onRadioPress = (sex: Sex) => {
+      dispatch({
+        type: 'set-sex',
+        data: sex
+      });
+    };
+
+    const selected = (sex: Sex): boolean => {
+      return store.getState().homepage.sex === sex;
+    };
+
     const state = store.getState().homepage;
     return (
       <ThemeProvider theme={Theme}>
@@ -56,18 +94,25 @@ export const Component: React.SFC<{ store: App.Store }> = (
           <AgeInput
             value={store.getState().homepage.age}
             onInput={onTextInput}
-            maxLength={2}
+            maxLength={4}
           />
-          <Radio
-            checked={this.state.selectedValue === 'a'}
-            onChange={this.handleChange}
-            value="a"
-            name="radio-button-demo"
-            aria-label="A"
-          />
-          <div>
+          <SexSelector>
+            <Radio
+              checked={selected('m')}
+              onChange={() => onRadioPress('m')}
+              style={RadioStyle(selected('m'))}
+            /><span style={SexText(selected('m'))}>Male</span>
+          </SexSelector>
+          <SexSelector>
+            <Radio
+              checked={selected('f')}
+              onChange={() => onRadioPress('f')}
+              style={RadioStyle(selected('f'))}
+            /><span style={SexText(selected('f'))}>Female</span>
+          </SexSelector>
+          <LifeLeftText>
             You have {lifeExpectancy(state.age) - state.age} years left.
-          </div>
+          </LifeLeftText>
         </Container>
       </ThemeProvider>
     );
