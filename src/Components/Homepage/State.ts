@@ -1,5 +1,6 @@
 export const State = () => ({
-  age: 0
+  age: 0,
+  gender:
 });
 
 export type State = ReturnType<typeof State>;

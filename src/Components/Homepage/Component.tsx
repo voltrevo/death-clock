@@ -6,6 +6,7 @@ import { HOMEPAGE_ACTION } from '../../GlobalConstants';
 import styled from '../../Util/StyledComponents';
 import { ThemeProvider } from 'styled-components';
 import Theme from '../../Util/Theme';
+import { Radio } from 'material-ui';
 
 const Container = styled.div`
   display: grid;
@@ -15,7 +16,7 @@ const Container = styled.div`
 const AgeInput = styled.input`
   grid-column: 2;
   color: ${p => p.theme.colour.SecondaryLight};
-  height: 60px;
+  height: 45px;
   font-size: 1.5rem;
   font-weight: 200;
   border-radius: 5px;
@@ -25,6 +26,8 @@ const AgeInput = styled.input`
   text-align: center;
   :focus {
     outline: none;
+    background-color: ${p => p.theme.colour.Secondary};
+    color: ${p => p.theme.colour.OnPrimary};
   }
   ::placeholder {
     color: ${p => p.theme.colour.Secondary};
@@ -38,34 +41,34 @@ export const Component: React.SFC<{ store: App.Store }> = (
     };
 
     const onTextInput = (evt: React.FormEvent<HTMLInputElement>) => {
+      let input = (evt.target as HTMLInputElement).value;
+      if (input === '') { input = '0'; }
       dispatch({
         type: 'set-age',
-        data: parseInt((evt.target as HTMLInputElement).value, 10)
+        data: parseInt(input, 10),
       });
     };
 
     const state = store.getState().homepage;
-
     return (
       <ThemeProvider theme={Theme}>
-        <div className="homepage">
-          <header className="header">
-            <h1 className="title">Sample App</h1>
-          </header>
-          <div className="body">
-            <input
-              type="text"
-              value={store.getState().homepage.age}
-              onInput={onTextInput}
-            />
-            <div>
-              You have {lifeExpectancy(state.age) - state.age} years left.
-            </div>
+        <Container>
+          <AgeInput
+            value={store.getState().homepage.age}
+            onInput={onTextInput}
+            maxLength={2}
+          />
+          <Radio
+            checked={this.state.selectedValue === 'a'}
+            onChange={this.handleChange}
+            value="a"
+            name="radio-button-demo"
+            aria-label="A"
+          />
+          <div>
+            You have {lifeExpectancy(state.age) - state.age} years left.
           </div>
-        </div>
-          <Container>
-            <AgeInput placeholder="AGE"/>
-          </Container>
+        </Container>
       </ThemeProvider>
     );
   }
