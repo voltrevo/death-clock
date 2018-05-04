@@ -12,11 +12,11 @@ import { CSSProperties } from 'react';
 import { toVerboseDurationString } from './util';
 
 const Container = styled.div`
-  padding-top: 50px;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   margin: 20px;
+  font-family: 'Julius Sans One', sans-serif;
 `;
 
 const Background = styled(Paper)`&&{
@@ -31,10 +31,17 @@ const Background = styled(Paper)`&&{
   box-shadow: 0 0 50px 0 rgba(0, 0, 0, .15);
 }`;
 
+const Title = styled.h1`
+  color: ${p => p.theme.colour.Secondary};
+  font-weight: 200;
+  grid-column: 1/-1;
+  justify-self: center;
+`;
+
 const DividerStyle = styled.hr`&&{
   grid-column: 1/-1;
   width: 220px;
-  border-width: .5px;
+  border: .5px solid ${p => p.theme.colour.Secondary};
 }`;
 
 const FemaleSelector = styled.div`
@@ -129,28 +136,7 @@ export const Component: React.SFC<{ store: App.Store }> = (
     return (
       <ThemeProvider theme={Theme}>
         <Container>
-          <AgeInput
-            value={store.getState().homepage.age}
-            onInput={onTextInput}
-            maxLength={4}
-          />
-          <MaleSelector>
-            <Radio
-              checked={selected('m')}
-              onChange={() => onRadioPress('m')}
-              style={RadioStyle(selected('m'))}
-            /><span style={SexText(selected('m'))}>Male</span>
-          </MaleSelector>
-          <FemaleSelector>
-            <Radio
-              checked={selected('f')}
-              onChange={() => onRadioPress('f')}
-              style={RadioStyle(selected('f'))}
-            /><span style={SexText(selected('f'))}>Female</span>
-          </FemaleSelector>
-          <LifeLeftText>
-            You have {toVerboseDurationString(timeRemaining)} left.
-          </LifeLeftText>
+          <Title>LIFE EXPECTANCY</Title>
           <Background>
             <AgeInput
               value={store.getState().homepage.age}
