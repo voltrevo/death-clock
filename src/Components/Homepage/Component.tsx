@@ -73,7 +73,7 @@ export const Component: React.SFC<{ store: App.Store }> = (
       if (input === '') { input = '0'; }
       dispatch({
         type: 'set-age',
-        data: parseInt(input, 10),
+        data: parseFloat(input)
       });
     };
 
