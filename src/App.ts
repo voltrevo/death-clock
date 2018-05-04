@@ -4,7 +4,12 @@ import * as GlobalConstants from './GlobalConstants';
 
 import * as Homepage from './Components/Homepage';
 
-const { SET_WHOLE_STATE, SET_PAGE, HOMEPAGE_ACTION } = GlobalConstants;
+const {
+  SET_WHOLE_STATE,
+  SET_PAGE,
+  HOMEPAGE_ACTION,
+  SET_TIME,
+} = GlobalConstants;
 
 export type Page = (
   { name: typeof Homepage.HOMEPAGE_ROUTE } |
@@ -14,6 +19,7 @@ export type Page = (
 export type State = {
   page: Page,
   homepage: Homepage.State,
+  time?: number,
 };
 
 export function State(seed: string): State {
@@ -36,6 +42,10 @@ export type Action = (
     type: typeof HOMEPAGE_ACTION,
     data: Homepage.Action,
   } |
+  {
+    type: typeof SET_TIME,
+    data: number,
+  } |
   never
 );
 
@@ -54,6 +64,10 @@ export function reduce(state: State, action: Action): State {
         ...state,
         homepage: Homepage.reduce(state.homepage, action.data)
       };
+    }
+
+    case SET_TIME: {
+      return { ...state, time: action.data };
     }
   }
 }
