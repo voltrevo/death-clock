@@ -9,6 +9,7 @@ import Theme from '../../Util/Theme';
 import { Radio } from 'material-ui';
 import Sex from '../../Util/Sex';
 import { CSSProperties } from 'react';
+import { toVerboseDurationString } from './util';
 
 const Container = styled.div`
   padding-top: 50px;
@@ -88,6 +89,8 @@ export const Component: React.SFC<{ store: App.Store }> = (
     };
 
     const state = store.getState().homepage;
+    const timeRemaining = lifeExpectancy(state.age) - state.age;
+
     return (
       <ThemeProvider theme={Theme}>
         <Container>
@@ -111,7 +114,7 @@ export const Component: React.SFC<{ store: App.Store }> = (
             /><span style={SexText(selected('f'))}>Female</span>
           </SexSelector>
           <LifeLeftText>
-            You have {lifeExpectancy(state.age) - state.age} years left.
+            You have {toVerboseDurationString(timeRemaining)} left.
           </LifeLeftText>
         </Container>
       </ThemeProvider>
