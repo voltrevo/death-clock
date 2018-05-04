@@ -6,7 +6,7 @@ import { HOMEPAGE_ACTION } from '../../GlobalConstants';
 import styled from '../../Util/StyledComponents';
 import { ThemeProvider } from 'styled-components';
 import Theme from '../../Util/Theme';
-import { Radio } from 'material-ui';
+import { Paper, Radio } from 'material-ui';
 import Sex from '../../Util/Sex';
 import { CSSProperties } from 'react';
 import { toVerboseDurationString } from './util';
@@ -14,16 +14,38 @@ import { toVerboseDurationString } from './util';
 const Container = styled.div`
   padding-top: 50px;
   display: grid;
-  grid-template-columns: 1fr 80px auto auto 1fr;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
+  margin: 20px;
 `;
 
-const SexSelector = styled.div`
-  align-items: center;
+const Background = styled(Paper)`&&{
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+  padding: 30px;
+  background-color: transparent;
+  border: 1px solid ${p => p.theme.colour.Secondary};
+  border-radius: 5px;
+  box-shadow: 0 0 50px 0 rgba(0, 0, 0, .15);
+}`;
+
+const DividerStyle = styled.hr`&&{
+  grid-column: 1/-1;
+  width: 220px;
+  border-width: .5px;
+}`;
+
+const FemaleSelector = styled.div`
+  justify-self: left;
+`;
+
+const MaleSelector = styled.div`
+  justify-self: right;
 `;
 
 const LifeLeftText = styled.h1`
-  align-self: center;
   text-align: center;
   color: ${p => p.theme.colour.Secondary};
   font-weight: 300;
@@ -32,15 +54,15 @@ const LifeLeftText = styled.h1`
 `;
 
 const AgeInput = styled.input`
-  grid-column: 2;
+  grid-column: span 2;
   color: ${p => p.theme.colour.SecondaryLight};
   height: 45px;
   font-size: 1.5rem;
   font-weight: 200;
   border-radius: 5px;
   box-sizing: border-box;
-  background-color: ${p => p.theme.colour.PrimaryLight};
-  border: 0;
+  background-color: transparent;
+  border: 1px solid ${p => p.theme.colour.Secondary};
   text-align: center;
   :focus {
     outline: none;
@@ -112,23 +134,49 @@ export const Component: React.SFC<{ store: App.Store }> = (
             onInput={onTextInput}
             maxLength={4}
           />
-          <SexSelector>
+          <MaleSelector>
             <Radio
               checked={selected('m')}
               onChange={() => onRadioPress('m')}
               style={RadioStyle(selected('m'))}
             /><span style={SexText(selected('m'))}>Male</span>
-          </SexSelector>
-          <SexSelector>
+          </MaleSelector>
+          <FemaleSelector>
             <Radio
               checked={selected('f')}
               onChange={() => onRadioPress('f')}
               style={RadioStyle(selected('f'))}
             /><span style={SexText(selected('f'))}>Female</span>
-          </SexSelector>
+          </FemaleSelector>
           <LifeLeftText>
             You have {toVerboseDurationString(timeRemaining)} left.
           </LifeLeftText>
+          <Background>
+            <AgeInput
+              value={store.getState().homepage.age}
+              onInput={onTextInput}
+              maxLength={9}
+            />
+            <MaleSelector>
+              <span style={SexText(selected('m'))}>M</span><Radio
+                checked={selected('m')}
+                onChange={() => onRadioPress('m')}
+                style={RadioStyle(selected('m'))}
+              />
+            </MaleSelector>
+            <FemaleSelector>
+              <Radio
+                checked={selected('f')}
+                onChange={() => onRadioPress('f')}
+                style={RadioStyle(selected('f'))}
+              /><span style={SexText(selected('f'))}>F</span>
+            </FemaleSelector>
+            <DividerStyle/>
+              <LifeLeftText>
+                You have {toVerboseDurationString(timeRemaining)} left.
+              </LifeLeftText>
+            <DividerStyle/>
+          </Background>
         </Container>
       </ThemeProvider>
     );
