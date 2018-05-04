@@ -7,7 +7,7 @@ import './style.css';
 
 import * as App from './App';
 
-const { SET_WHOLE_STATE, APP_STATE } = GlobalConstants;
+const { SET_WHOLE_STATE, APP_STATE, SET_TIME } = GlobalConstants;
 
 const seed = `${Math.random()}`;
 const store = App.Store(seed);
@@ -36,3 +36,15 @@ render();
 store.subscribe(render);
 
 registerServiceWorker();
+
+const updateTime = () => store.dispatch({ type: SET_TIME, data: Date.now() });
+
+const updateTimeLoop = () => {
+  updateTime();
+
+  // FIXME: Ideally the tick frequency would depend on how long it takes a
+  // a second to expire from your time remaining to get a smoother countdown.
+  setTimeout(updateTimeLoop, 1000);
+};
+
+updateTimeLoop();

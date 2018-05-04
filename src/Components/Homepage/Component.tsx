@@ -89,7 +89,20 @@ export const Component: React.SFC<{ store: App.Store }> = (
     };
 
     const state = store.getState().homepage;
-    const timeRemaining = lifeExpectancy(state.age) - state.age;
+    const t = store.getState().time;
+
+    const timeOfDay = (
+      t === undefined ?
+      0 :
+      t - 86400000 * Math.floor(t / 86400000)
+    );
+
+    const ageWithTimeOfDay = state.age + timeOfDay / 86400000 / 365.24;
+
+    const timeRemaining = (
+      lifeExpectancy(ageWithTimeOfDay, state.sex) -
+      ageWithTimeOfDay
+    );
 
     return (
       <ThemeProvider theme={Theme}>
