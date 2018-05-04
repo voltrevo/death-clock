@@ -145,13 +145,13 @@ function survivalRate(sex: 'm' | 'f', ageStart: number, ageEnd: number) {
   return nEnd / nStart;
 }
 
-export default (age: number) => {
+export default (age: number, sex: 'm' | 'f') => {
   // FIXME: This methodology is a little different to ABS
 
   let lifeExp = age;
 
   for (let i = 1; age + i <= 110; i++) {
-    lifeExp += survivalRate('m', age, age + i);
+    lifeExp += survivalRate(sex, age, age + i);
   }
 
   return lifeExp;
