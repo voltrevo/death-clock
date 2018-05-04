@@ -3,3 +3,5 @@ export * from './Component';
 
 // TODO: Desired form `export * as Constants from './Constants' not available.
 export * from './Constants';
+
+export * from './State';

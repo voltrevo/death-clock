@@ -4,7 +4,7 @@ import * as GlobalConstants from './GlobalConstants';
 
 import * as Homepage from './Components/Homepage';
 
-const { SET_WHOLE_STATE, SET_PAGE } = GlobalConstants;
+const { SET_WHOLE_STATE, SET_PAGE, HOMEPAGE_ACTION } = GlobalConstants;
 
 export type Page = (
   { name: typeof Homepage.HOMEPAGE_ROUTE } |
@@ -13,11 +13,13 @@ export type Page = (
 
 export type State = {
   page: Page,
+  homepage: Homepage.State,
 };
 
 export function State(seed: string): State {
   return {
     page: { name: Homepage.HOMEPAGE_ROUTE },
+    homepage: Homepage.State(),
   };
 }
 
@@ -29,6 +31,10 @@ export type Action = (
   {
     type: typeof SET_PAGE,
     data: Page,
+  } |
+  {
+    type: typeof HOMEPAGE_ACTION,
+    data: Homepage.Action,
   } |
   never
 );
@@ -43,7 +49,12 @@ export function reduce(state: State, action: Action): State {
       return { ...state, page: action.data };
     }
 
-    default: return state;
+    case HOMEPAGE_ACTION: {
+      return {
+        ...state,
+        homepage: Homepage.reduce(state.homepage, action.data)
+      };
+    }
   }
 }
 
