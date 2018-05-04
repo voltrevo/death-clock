@@ -100,6 +100,18 @@ const data = [
   [3618, 7208],
   [2547, 5194],
   [1732, 3639],
+
+  // Extrapolation with survival decaying by 10% each year
+  [1060, 2294],
+  [583, 1301],
+  [289, 664],
+  [128, 305],
+  [51, 126],
+  [18, 46],
+  [5, 15],
+  [1, 4],
+  [0, 1],
+  [0, 0],
 ];
 
 function interpolate(a: number, x: number, b: number) {
@@ -116,10 +128,8 @@ function sexIndex(sex: 'm' | 'f'): number {
 function numPeople(sex: 'm' | 'f', age: number) {
   const si = sexIndex(sex);
 
-  if (age > 100) {
-    const n99 = data[99][si];
-    const n100 = data[100][si];
-    return n100 * ((n100 / n99) ** (age - 100));
+  if (age > 110) {
+    return 0;
   }
 
   const ageLow = Math.floor(age);
@@ -140,7 +150,7 @@ export default (age: number) => {
 
   let lifeExp = age;
 
-  for (let i = 1; i <= 200; i++) {
+  for (let i = 1; age + i <= 110; i++) {
     lifeExp += survivalRate('m', age, age + i);
   }
 
