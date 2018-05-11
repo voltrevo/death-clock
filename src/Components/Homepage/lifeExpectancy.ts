@@ -146,16 +146,19 @@ function survivalRate(sex: 'm' | 'f', ageStart: number, ageEnd: number) {
 }
 
 const lifeExpectancy = (age: number, sex: 'm' | 'f'): number => {
-  // FIXME: This methodology is a little different to ABS
-
   if (age < 0) {
     return -age + lifeExpectancy(0, sex);
   }
 
-  let lifeExp = age;
+  let lifeExp = 0;
+  let proportion = 1;
 
   for (let i = 1; age + i <= 110; i++) {
-    lifeExp += survivalRate(sex, age, age + i);
+    const aliveProp = proportion * survivalRate(sex, age + i - 1, age + i);
+    const deadProp = proportion - aliveProp;
+    const deadAverageAge = age + i - 0.5;
+    lifeExp += deadProp * deadAverageAge;
+    proportion = aliveProp;
   }
 
   return lifeExp;
