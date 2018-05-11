@@ -10,7 +10,7 @@ import * as App from './App';
 const { SET_WHOLE_STATE, APP_STATE, SET_TIME } = GlobalConstants;
 
 const seed = `${Math.random()}`;
-const store = App.Store(seed);
+const store = App.Store(seed, Date.now());
 
 const storedState = localStorage.getItem(APP_STATE);
 

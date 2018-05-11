@@ -93,6 +93,8 @@ const SexText = (selected: boolean): CSSProperties => {
 
 export const Component: React.SFC<{ store: App.Store }> = (
   ({store}) => {
+    const state = store.getState();
+
     const dispatch = (action: State.Action) => {
       store.dispatch({ type: HOMEPAGE_ACTION, data: action });
     };
@@ -101,8 +103,8 @@ export const Component: React.SFC<{ store: App.Store }> = (
       let input = (evt.target as HTMLInputElement).value;
       if (input === '') { input = '0'; }
       dispatch({
-        type: 'set-age',
-        data: parseFloat(input)
+        type: 'set-timeOfBirth',
+        data: Date.now() - 365.24 * 86400 * 1000 * parseFloat(input)
       });
     };
 
@@ -117,20 +119,18 @@ export const Component: React.SFC<{ store: App.Store }> = (
       return store.getState().homepage.sex === sex;
     };
 
-    const state = store.getState().homepage;
-    const t = store.getState().time;
+    const t = state.time;
+    const timeOfBirth = state.homepage.timeOfBirth || state.loadTime;
 
-    const timeOfDay = (
-      t === undefined ?
-      0 :
-      t - 86400000 * Math.floor(t / 86400000)
+    const age = (
+      t !== null ?
+      (t - timeOfBirth) / 86400000 / 365.24 :
+      0
     );
 
-    const ageWithTimeOfDay = state.age + timeOfDay / 86400000 / 365.24;
-
     const timeRemaining = (
-      lifeExpectancy(ageWithTimeOfDay, state.sex) -
-      ageWithTimeOfDay
+      lifeExpectancy(age, state.homepage.sex) -
+      age
     );
 
     return (
@@ -139,7 +139,7 @@ export const Component: React.SFC<{ store: App.Store }> = (
           <Title>LIFE EXPECTANCY</Title>
           <Background>
             <AgeInput
-              value={store.getState().homepage.age}
+              value={age.toFixed(0)}
               onInput={onTextInput}
               maxLength={9}
             />

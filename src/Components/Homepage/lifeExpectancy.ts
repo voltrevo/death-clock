@@ -145,8 +145,12 @@ function survivalRate(sex: 'm' | 'f', ageStart: number, ageEnd: number) {
   return nEnd / nStart;
 }
 
-export default (age: number, sex: 'm' | 'f') => {
+const lifeExpectancy = (age: number, sex: 'm' | 'f'): number => {
   // FIXME: This methodology is a little different to ABS
+
+  if (age < 0) {
+    return -age + lifeExpectancy(0, sex);
+  }
 
   let lifeExp = age;
 
@@ -156,3 +160,5 @@ export default (age: number, sex: 'm' | 'f') => {
 
   return lifeExp;
 };
+
+export default lifeExpectancy;

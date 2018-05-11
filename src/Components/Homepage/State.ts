@@ -1,21 +1,21 @@
 import Sex from '../../Util/Sex';
 
 export const State = () => ({
-  age: 0,
+  timeOfBirth: null as null | number,
   sex: 'm' as Sex
 });
 
 export type State = ReturnType<typeof State>;
 
 export type Action =
-  | { type: 'set-age', data: number }
+  | { type: 'set-timeOfBirth', data: number }
   | { type: 'set-sex', data: Sex }
 ;
 
 export function reduce(state: State, action: Action): State {
   switch (action.type) {
-    case 'set-age':
-      return {...state, age: action.data };
+    case 'set-timeOfBirth':
+      return {...state, timeOfBirth: action.data };
     case 'set-sex':
       return {...state, sex: action.data };
   }

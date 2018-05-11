@@ -19,13 +19,16 @@ export type Page = (
 export type State = {
   page: Page,
   homepage: Homepage.State,
-  time?: number,
+  time: number | null,
+  loadTime: number
 };
 
-export function State(seed: string): State {
+export function State(seed: string, loadTime: number): State {
   return {
     page: { name: Homepage.HOMEPAGE_ROUTE },
     homepage: Homepage.State(),
+    time: null,
+    loadTime,
   };
 }
 
@@ -80,8 +83,8 @@ export type Store = {
   subscribe: (callback: () => void) => void
 };
 
-export function Store(seed: string): Store {
-  const initState = State(seed);
+export function Store(seed: string, loadTime: number): Store {
+  const initState = State(seed, loadTime);
 
   const reduxStore = createStore(
     (state, action) => reduce(
