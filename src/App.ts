@@ -3,6 +3,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import * as GlobalConstants from './GlobalConstants';
 
 import * as Homepage from './Components/Homepage';
+import lifeExpectancy from './Components/Homepage/lifeExpectancy';
 
 const {
   SET_WHOLE_STATE,
@@ -20,7 +21,8 @@ export type State = {
   page: Page,
   homepage: Homepage.State,
   time: number | null,
-  loadTime: number
+  loadTime: number,
+  desiredUpdateTime: number | null,
 };
 
 export function State(seed: string, loadTime: number): State {
@@ -29,6 +31,7 @@ export function State(seed: string, loadTime: number): State {
     homepage: Homepage.State(),
     time: null,
     loadTime,
+    desiredUpdateTime: null,
   };
 }
 
@@ -70,7 +73,33 @@ export function reduce(state: State, action: Action): State {
     }
 
     case SET_TIME: {
-      return { ...state, time: action.data };
+      const time = action.data;
+
+      const age = (
+        (time - (state.homepage.timeOfBirth || state.loadTime)) /
+        (365.24 * 86400000)
+      );
+
+      const timeLeft = lifeExpectancy(age, state.homepage.sex) - age;
+
+      const ageAfter1Sec = age + (1 / (365.24 * 86400));
+
+      const timeLeftAfter1Sec = lifeExpectancy(
+        ageAfter1Sec,
+        state.homepage.sex
+      ) - ageAfter1Sec;
+
+      const countdownRate = (timeLeft - timeLeftAfter1Sec) * 365.24 * 86400;
+      const timeLeftSec = timeLeft * 365.24 * 86400;
+
+      const faceTimeUntilTick = 1000 * (
+        timeLeftSec - (Math.round(timeLeftSec) - 1)
+      );
+
+      const timeUntilTick = faceTimeUntilTick / countdownRate;
+      const desiredUpdateTime = time + timeUntilTick;
+
+      return { ...state, time, desiredUpdateTime };
     }
   }
 }

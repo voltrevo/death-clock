@@ -1,7 +1,5 @@
 export function toVerboseDurationString(preciseYears: number) {
-  // The Math.ceil here is so that the countdown would strike 0 at the moment
-  // of death.
-  let secondsLeft = Math.ceil(preciseYears * 365.24 * 86400);
+  let secondsLeft = Math.round(preciseYears * 365.24 * 86400);
 
   const years = Math.floor(secondsLeft / (365.24 * 86400));
   secondsLeft -= years * 365.24 * 86400;

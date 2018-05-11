@@ -37,14 +37,13 @@ store.subscribe(render);
 
 registerServiceWorker();
 
-const updateTime = () => store.dispatch({ type: SET_TIME, data: Date.now() });
+const updateTime = (t: number) => store.dispatch({ type: SET_TIME, data: t });
 
 const updateTimeLoop = () => {
-  updateTime();
-
-  // FIXME: Ideally the tick frequency would depend on how long it takes a
-  // a second to expire from your time remaining to get a smoother countdown.
-  setTimeout(updateTimeLoop, 1000);
+  const t = Date.now();
+  updateTime(t);
+  const { desiredUpdateTime } = store.getState();
+  setTimeout(updateTimeLoop, (desiredUpdateTime || t + 1000) - t);
 };
 
 updateTimeLoop();
