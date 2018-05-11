@@ -1,8 +1,9 @@
 export function toVerboseDurationString(preciseYears: number) {
-  let secondsLeft = Math.round(preciseYears * 365.24 * 86400);
+  const secondsInYear = Math.round(365.24 * 86400);
+  let secondsLeft = Math.round(preciseYears * secondsInYear);
 
-  const years = Math.floor(secondsLeft / (365.24 * 86400));
-  secondsLeft -= years * 365.24 * 86400;
+  const years = Math.floor(secondsLeft / secondsInYear);
+  secondsLeft -= years * secondsInYear;
 
   const weeks = Math.floor(secondsLeft / (7 * 86400));
   secondsLeft -= weeks * 7 * 86400;
