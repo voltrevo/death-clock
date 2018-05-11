@@ -1,26 +1,31 @@
-export function toVerboseDurationString(years: number) {
-  const wholeYears = Math.floor(years);
+export function toVerboseDurationString(preciseYears: number) {
+  // The Math.ceil here is so that the countdown would strike 0 at the moment
+  // of death.
+  let secondsLeft = Math.ceil(preciseYears * 365.24 * 86400);
 
-  const weeks = (365.24 / 7) * (years - wholeYears);
-  const wholeWeeks = Math.floor(weeks);
+  const years = Math.floor(secondsLeft / (365.24 * 86400));
+  secondsLeft -= years * 365.24 * 86400;
 
-  const days = 7 * (weeks - wholeWeeks);
-  const wholeDays = Math.floor(days);
+  const weeks = Math.floor(secondsLeft / (7 * 86400));
+  secondsLeft -= weeks * 7 * 86400;
 
-  const hours = 24 * (days - wholeDays);
-  const wholeHours = Math.floor(hours);
+  const days = Math.floor(secondsLeft / 86400);
+  secondsLeft -= days * 86400;
 
-  const minutes = 60 * (hours - wholeHours);
-  const wholeMinutes = Math.floor(minutes);
+  const hours = Math.floor(secondsLeft / 3600);
+  secondsLeft -= hours * 3600;
 
-  const seconds = Math.ceil(60 * (minutes - wholeMinutes));
+  const minutes = Math.floor(secondsLeft / 60);
+  secondsLeft -= minutes * 60;
+
+  const seconds = secondsLeft;
 
   return [
-    `${wholeYears} years`,
-    `${wholeWeeks} weeks`,
-    `${wholeDays} days`,
-    `${wholeHours} hours`,
-    `${wholeMinutes} minutes`,
+    `${years} years`,
+    `${weeks} weeks`,
+    `${days} days`,
+    `${hours} hours`,
+    `${minutes} minutes`,
     `and ${seconds} seconds`,
   ].join(', ');
 }
